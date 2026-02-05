@@ -73,18 +73,28 @@ export default function SequenceScroll() {
         imagesRef.current[i - 1] = img;
         maxLoadedIndexRef.current = Math.max(maxLoadedIndexRef.current, i);
         loadedCount++;
-        setProgress(Math.round((loadedCount / frameCount) * 100));
-        if (!loaded) {
+        const currentProgress = Math.round((loadedCount / frameCount) * 100);
+        setProgress(currentProgress);
+        
+        // Hanya set loaded setelah SEMUA gambar selesai
+        if (loadedCount === frameCount) {
           setLoaded(true);
           renderFrame(1);
         }
       };
       img.onerror = () => {
         loadedCount++;
-        setProgress(Math.round((loadedCount / frameCount) * 100));
+        const currentProgress = Math.round((loadedCount / frameCount) * 100);
+        setProgress(currentProgress);
+        
+        // Tetap mark sebagai loaded meskipun ada error
+        if (loadedCount === frameCount) {
+          setLoaded(true);
+          renderFrame(1);
+        }
       };
     }
-  }, [loaded, renderFrame]);
+  }, [renderFrame]);
 
   useEffect(() => {
     if (!loaded) return;
@@ -119,7 +129,22 @@ export default function SequenceScroll() {
                <div className="w-3 h-3 bg-[#C72229] rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
                <div className="w-3 h-3 bg-[#C72229] rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
            </div>
-           <div className="mt-4 text-black font-semibold text-sm sm:text-base font-[family-name:var(--font-caveat)]">Menyiapkan kenangan...</div>
+           <div className="mt-6 text-black font-semibold text-sm sm:text-base font-[family-name:var(--font-caveat)]">
+             Menyiapkan kenangan...
+           </div>
+           
+           {/* Progress Bar */}
+           <div className="mt-4 w-64 sm:w-80">
+             <div className="bg-black/10 rounded-full h-2 overflow-hidden">
+               <div 
+                 className="bg-[#C72229] h-full transition-all duration-300 ease-out"
+                 style={{ width: `${progress}%` }}
+               />
+             </div>
+             <p className="text-center mt-2 text-xs sm:text-sm text-black/70 font-[family-name:var(--font-poppins)]">
+               {progress}% ({Math.round((progress / 100) * frameCount)}/{frameCount} gambar)
+             </p>
+           </div>
         </div>
       )}
 
