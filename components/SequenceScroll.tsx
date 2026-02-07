@@ -6,12 +6,27 @@ import NextImage from "next/image";
 
 const frameCount = 240;
 
+const loadingQuotes = [
+  "Tahukah kamu? Kopi kenangan lebih nikmat saat dibagikan bersama orang tersayang ☕❤️",
+  "Fun fact: Rata-rata orang butuh 3 cangkir kopi untuk jatuh cinta... atau mungkin hanya 1? 😊",
+  "Sedang menyeduh kenangan indah untukmu... Sabar ya! ✨",
+  "Kopi terbaik adalah kopi yang dinikmati berdua. Siapa kopi kenangan-mu? 💕",
+  "Tips: Scroll pelan-pelan nanti ya, biar kenangannya terasa lebih manis! 🍃",
+  "Sementara menunggu, ingat: Kenangan indah dimulai dari secangkir kopi sederhana ☕",
+  "Loading... seperti menunggu kopi dingin, worth it kok! 😄",
+  "Did you know? 100% pengguna yang menunggu ini akan tersenyum! (data kami 100% akurat) 😁",
+  "Hampir siap! Seperti kopi, kenangan juga butuh waktu untuk disajikan dengan sempurna 🌟",
+  "Pro tip: Kopi kenangan paling enak diminum sambil ngobrol. Siap-siap scroll ya! 🚀"
+];
+
 export default function SequenceScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [currentQuote, setCurrentQuote] = useState(0);
+  const [fadeIn, setFadeIn] = useState(true);
   const lastIndexRef = useRef<number>(-1);
   const maxLoadedIndexRef = useRef<number>(0);
 
@@ -19,6 +34,21 @@ export default function SequenceScroll() {
     target: containerRef,
     offset: ["start start", "end end"],
   });
+
+  // Rotate quotes every 3 seconds
+  useEffect(() => {
+    if (loaded) return;
+    
+    const interval = setInterval(() => {
+      setFadeIn(false);
+      setTimeout(() => {
+        setCurrentQuote((prev) => (prev + 1) % loadingQuotes.length);
+        setFadeIn(true);
+      }, 300);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [loaded]);
 
   const renderFrame = useCallback((index: number) => {
     const canvas = canvasRef.current;
@@ -138,6 +168,17 @@ export default function SequenceScroll() {
                  style={{ width: `${progress}%` }}
                />
              </div>
+           </div>
+
+           {/* Fun Quote */}
+           <div className="mt-6 max-w-md px-6 text-center">
+             <p 
+               className={`text-sm sm:text-base text-black/70 font-[family-name:var(--font-poppins)] transition-opacity duration-300 ${
+                 fadeIn ? 'opacity-100' : 'opacity-0'
+               }`}
+             >
+               {loadingQuotes[currentQuote]}
+             </p>
            </div>
         </div>
       )}
