@@ -129,21 +129,15 @@ export default function SequenceScroll() {
                <div className="w-3 h-3 bg-[#C72229] rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
                <div className="w-3 h-3 bg-[#C72229] rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
            </div>
-           <div className="mt-6 text-black font-semibold text-sm sm:text-base font-[family-name:var(--font-caveat)]">
-             Menyiapkan kenangan...
-           </div>
            
            {/* Progress Bar */}
-           <div className="mt-4 w-64 sm:w-80">
+           <div className="mt-6 w-64 sm:w-80">
              <div className="bg-black/10 rounded-full h-2 overflow-hidden">
                <div 
                  className="bg-[#C72229] h-full transition-all duration-300 ease-out"
                  style={{ width: `${progress}%` }}
                />
              </div>
-             <p className="text-center mt-2 text-xs sm:text-sm text-black/70 font-[family-name:var(--font-poppins)]">
-               {progress}% ({Math.round((progress / 100) * frameCount)}/{frameCount} gambar)
-             </p>
            </div>
         </div>
       )}
